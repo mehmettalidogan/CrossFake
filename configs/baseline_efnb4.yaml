@@ -1,0 +1,44 @@
+seed: 42
+output_dir: outputs/baseline_efnb4
+experiment_name: baseline_efnb4
+
+data:
+  manifest: data/faces/manifest.csv
+  train_datasets: [ffpp]
+  train_split: train
+  val_datasets: [ffpp]
+  val_split: val
+  image_size: 224
+  frames_per_video_train: 8
+  num_workers: 4
+  margin: 0.3
+
+model:
+  name: efficientnet_b4
+  pretrained: true
+  freeze_backbone: false
+  dropout: 0.3
+
+train:
+  method: baseline
+  epochs: 20
+  batch_size: 12
+  accum_steps: 2
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+  loss: bce
+  focal_gamma: 2.0
+  amp: true
+  early_stopping_patience: 5
+  num_warmup_epochs: 1
+
+eval:
+  frames_per_video: 32
+  batch_size: 32
+  datasets:
+    - name: ffpp
+      split: test
+    - name: celebdf
+      split: test
+    - name: dfdcp
+      split: test

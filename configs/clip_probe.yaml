@@ -1,0 +1,47 @@
+seed: 42
+output_dir: outputs/clip_probe
+experiment_name: clip_probe
+
+data:
+  manifest: data/faces/manifest.csv
+  train_datasets: [ffpp]
+  train_split: train
+  val_datasets: [ffpp]
+  val_split: val
+  image_size: 224
+  frames_per_video_train: 8
+  num_workers: 4
+  margin: 0.3
+
+model:
+  name: clip_vit_b16
+  pretrained: true
+  freeze_backbone: true
+  dropout: 0.2
+  clip_model: ViT-B-16
+  clip_pretrained: openai
+  head_hidden: 256
+
+train:
+  method: clip
+  epochs: 15
+  batch_size: 16
+  accum_steps: 1
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  loss: bce
+  focal_gamma: 2.0
+  amp: true
+  early_stopping_patience: 5
+  num_warmup_epochs: 1
+
+eval:
+  frames_per_video: 32
+  batch_size: 32
+  datasets:
+    - name: ffpp
+      split: test
+    - name: celebdf
+      split: test
+    - name: dfdcp
+      split: test

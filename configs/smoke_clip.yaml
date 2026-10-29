@@ -1,0 +1,45 @@
+seed: 0
+output_dir: outputs/smoke_clip
+experiment_name: smoke_clip
+
+data:
+  manifest: data/faces/manifest.csv
+  train_datasets: [ffpp]
+  train_split: train
+  val_datasets: [ffpp]
+  val_split: val
+  image_size: 224
+  frames_per_video_train: 4
+  num_workers: 0
+
+model:
+  name: clip_vit_b16
+  pretrained: false
+  freeze_backbone: true
+  dropout: 0.1
+  clip_model: ViT-B-16
+  clip_pretrained: none
+  head_hidden: 128
+
+train:
+  method: clip
+  epochs: 1
+  batch_size: 4
+  accum_steps: 1
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  loss: bce
+  amp: false
+  early_stopping_patience: 2
+  num_warmup_epochs: 0
+
+eval:
+  frames_per_video: 4
+  batch_size: 4
+  datasets:
+    - name: ffpp
+      split: test
+    - name: celebdf
+      split: test
+    - name: dfdcp
+      split: test
